@@ -1,8 +1,6 @@
-package org.example;
+package org.example.application;
 
 import org.example.interfaces.IWriter;
-
-import java.io.IOException;
 
 public class StringWriter implements IWriter {
 

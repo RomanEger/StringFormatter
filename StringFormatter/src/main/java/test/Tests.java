@@ -1,14 +1,36 @@
 package test;
 
-import org.example.*;
+import org.example.application.Formatter;
+import org.example.application.StringReader;
+import org.example.application.StringWriter;
 import org.example.interfaces.*;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Tests {
 
     @Test
-    public void Test_WithQuotations(){
+    public void Test_WithSimpleCode() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IWriter writer = new StringWriter(sb);
+        IReader reader = new StringReader("public class Foo{private int x;}");
+        Formatter formatter = new Formatter();
+        String result = formatter.format(writer, reader);
+        assertEquals(
+                "public class Foo{" +
+                        "\n\tprivate int x;" +
+                        "\n}",
+                result);
+    }
+
+    @Test
+    public void Test_WithCode
+
+    @Test
+    public void Test_WithQuotations() throws IOException {
         StringBuilder sb = new StringBuilder();
         IWriter writer = new StringWriter(sb);
         IReader reader = new StringReader("{{{}}}");
@@ -25,7 +47,7 @@ public class Tests {
     }
 
     @Test
-    public void Test_WithText(){
+    public void Test_WithText() throws IOException {
         StringBuilder sb = new StringBuilder();
         IWriter writer = new StringWriter(sb);
         IReader reader = new StringReader("{str;stt;stg;}");
@@ -41,7 +63,7 @@ public class Tests {
     }
 
     @Test
-    public void Test_WithQuotationsAndText(){
+    public void Test_WithQuotationsAndText() throws IOException {
         StringBuilder sb = new StringBuilder();
         IWriter writer = new StringWriter(sb);
         IReader reader = new StringReader("{str;stt;ggt;{sss;}}");

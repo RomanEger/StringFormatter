@@ -1,7 +1,9 @@
 package org.example;
 
-import org.example.interfaces.IReader;
-import org.example.interfaces.IWriter;
+import org.example.application.*;
+import org.example.interfaces.*;
+
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,8 +14,13 @@ public class Main {
 
         IReader reader = new StringReader(sb.toString());
 
-        String result = formatter.format(writer, reader);
-        
+        String result = null;
+        try {
+            result = formatter.format(writer, reader);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
         System.out.println(result);
     }
 }

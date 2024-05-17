@@ -38,8 +38,10 @@ public class FileWriter implements IWriter {
 
     @Override
     public void write(String data) throws IOException {
-        for(int i = 0; i < data.length(); i++){
+        int length = data.length();
+        for(int i = 0; i < length; i++){
             write(data.charAt(i));
         }
+        writer.flush();
     }
 }

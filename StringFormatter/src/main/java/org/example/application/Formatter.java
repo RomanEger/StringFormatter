@@ -56,7 +56,7 @@ public class Formatter {
                     countTab = minTabs;
                 }
             }
-
+            String[] str = lexeme.getLexeme().toString().split(",");
             sb.append(lexeme.getLexeme().get(i));
 
             if(sb.length() < 5){

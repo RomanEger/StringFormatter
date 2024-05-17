@@ -28,19 +28,21 @@ public class Formatter {
         int countTab = 0;
         int minTabs = 0;
 
-        for(int i = 1; i < lexeme.getLexeme().stream().count(); i++){
+        for(int i = 1; i < lexeme.getLexeme().size(); i++){
             if((lexeme.getLexeme().get(i - 1).equals(new Token('{'))) ||
                     (lexeme.getLexeme().get(i - 1).equals(new Token('}'))) ||
                     (lexeme.getLexeme().get(i - 1).equals(new Token(';')))){
                 sb.append("\n");
-
+                if(i == lexeme.getLexeme().size() - 1){
+                    countTab = minTabs = 0;
+                }
                 if(lexeme.getLexeme().get(i-1).equals(new Token('{')) &&
                         !lexeme.getLexeme().get(i).equals(new Token('}'))){
                     countTab++;
                 } else if(lexeme.getLexeme().get(i-1).equals(new Token('}')) ||
                         (lexeme.getLexeme().get(i-1).equals(new Token(';')) &&
-                                lexeme.getLexeme().get(i).equals(new Token('}')))
-                                && countTab > minTabs){
+                                lexeme.getLexeme().get(i).equals(new Token('}'))) &&
+                                countTab > minTabs){
                     countTab--;
                 }
 
@@ -56,7 +58,7 @@ public class Formatter {
                     countTab = minTabs;
                 }
             }
-            String[] str = lexeme.getLexeme().toString().split(",");
+            //String[] str = lexeme.getLexeme().toString().split(",");
             sb.append(lexeme.getLexeme().get(i));
 
             if(sb.length() < 5){

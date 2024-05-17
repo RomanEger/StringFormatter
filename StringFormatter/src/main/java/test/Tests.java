@@ -1,19 +1,88 @@
 package test;
 
-import org.example.*;
-import org.example.interfaces.*;
+import org.example.application.Formatter;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Tests {
 
     @Test
-    public void Test_WithQuotations(){
-        StringBuilder sb = new StringBuilder();
-        IWriter writer = new StringWriter(sb);
-        IReader reader = new StringReader("{{{}}}");
+    public void Test_WithSimpleCode(){
         Formatter formatter = new Formatter();
-        String result = formatter.format(writer, reader);
+        String result = formatter.format("public class Foo{private int x;}");
+        assertEquals(
+                "public class Foo{" +
+                        "\n\tprivate int x;" +
+                        "\n}",
+                result);
+    }
+
+    @Test
+    public void Test_WithIfElse(){
+        Formatter formatter = new Formatter();
+        String result = formatter.format("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "if(x>0){" +
+                "return x;" +
+                "}" +
+                "else {" +
+                "return -1;" +
+                "}" +
+                "}" +
+                "}");
+        String expected = "package test;" +
+                "\npublic class Foo{" +
+                "\n\tprivate int x;" +
+                "\n\tpublic int getX(){" +
+                "\n\t\tif(x>0){" +
+                "\n\t\t\treturn x;" +
+                "\n\t\t}" +
+                "\n\t\telse {" +
+                "\n\t\t\treturn -1;" +
+                "\n\t\t}" +
+                "\n\t}" +
+                "\n}";
+
+        assertEquals(
+                expected,
+                result);
+    }
+
+    @Test
+    public void Test_WithTwoMethods(){
+        Formatter formatter = new Formatter();
+        String result = formatter.format("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "return x;" +
+                "}" +
+                "public void setX(int x){" +
+                "this.x = x;" +
+                "}" +
+                "}");
+        String expected = "package test;" +
+                "\npublic class Foo{" +
+                "\n\tprivate int x;" +
+                "\n\tpublic int getX(){" +
+                "\n\t\treturn x;" +
+                "\n\t}" +
+                "\n\tpublic void setX(int x){" +
+                "\n\t\tthis.x = x;" +
+                "\n\t}" +
+                "\n}";
+
+        assertEquals(
+                expected,
+                result);
+    }
+
+    @Test
+    public void Test_WithQuotations(){
+        Formatter formatter = new Formatter();
+        String result = formatter.format("{{{}}}");
         assertEquals(
                 "{" +
                         "\n\t{" +
@@ -26,11 +95,8 @@ public class Tests {
 
     @Test
     public void Test_WithText(){
-        StringBuilder sb = new StringBuilder();
-        IWriter writer = new StringWriter(sb);
-        IReader reader = new StringReader("{str;stt;stg;}");
         Formatter formatter = new Formatter();
-        String result = formatter.format(writer, reader);
+        String result = formatter.format("{str;stt;stg;}");
         assertEquals(
                 "{" +
                         "\n\tstr;" +
@@ -42,11 +108,8 @@ public class Tests {
 
     @Test
     public void Test_WithQuotationsAndText(){
-        StringBuilder sb = new StringBuilder();
-        IWriter writer = new StringWriter(sb);
-        IReader reader = new StringReader("{str;stt;ggt;{sss;}}");
         Formatter formatter = new Formatter();
-        String result = formatter.format(writer, reader);
+        String result = formatter.format("{str;stt;ggt;{sss;}}");
         assertEquals(
                 "{" +
                         "\n\tstr;" +
@@ -57,5 +120,63 @@ public class Tests {
                         "\n\t}" +
                         "\n}",
                 result);
+    }
+    
+    @Test
+    public void Test_WithString(){
+        Formatter formatter = new Formatter();
+        String data = "package test;" +
+                "public class Tests{" +
+                "private void helloWorld(){" +
+                "if(true){" +
+                "System.out.println(\"Hello world!\");" +
+                "}" +
+                "else{" +
+                "int x=5;" +
+                "}" +
+                "}" +
+                "}";
+        String result = formatter.format(data);
+        String expected = "package test;" +
+                "\npublic class Tests{" +
+                "\n\tprivate void helloWorld(){" +
+                "\n\t\tif(true){" +
+                "\n\t\t\tSystem.out.println(\"Hello world!\");" +
+                "\n\t\t}" +
+                "\n\t\telse{" +
+                "\n\t\t\tint x=5;" +
+                "\n\t\t}" +
+                "\n\t}" +
+                "\n}";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void Test_WithSpaces(){
+        Formatter formatter = new Formatter();
+        String data = "package    test;" +
+                "public class Tests{" +
+                "  private void helloWorld(){" +
+                " if(true){" +
+                "System.out.println(\"Hello world!\");" +
+                "}" +
+                "else{   " +
+                "int x=5;" +
+                "}" +
+                "}" +
+                "}";
+        String result = formatter.format(data);
+        String expected = "package test;" +
+                "\npublic class Tests{" +
+                "\n\tprivate void helloWorld(){" +
+                "\n\t\tif(true){" +
+                "\n\t\t\tSystem.out.println(\"Hello world!\");" +
+                "\n\t\t}" +
+                "\n\t\telse{" +
+                "\n\t\t\tint x=5;" +
+                "\n\t\t}" +
+                "\n\t}" +
+                "\n}";
+        assertEquals(expected, result);
     }
 }

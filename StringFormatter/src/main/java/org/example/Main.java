@@ -1,13 +1,18 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.StringJoiner;
+import org.example.interfaces.IReader;
+import org.example.interfaces.IWriter;
 
 public class Main {
     public static void main(String[] args) {
         Formatter formatter = new Formatter();
 
-        String result = formatter.stringFormatter(formatter.reader());
+        StringBuilder sb = new StringBuilder();
+        IWriter writer = new StringWriter(sb);
+
+        IReader reader = new StringReader(sb.toString());
+
+        String result = formatter.format(writer, reader);
         
         System.out.println(result);
     }

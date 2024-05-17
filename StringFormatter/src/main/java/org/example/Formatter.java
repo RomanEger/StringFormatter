@@ -1,24 +1,43 @@
 package org.example;
-import java.io.FileInputStream;
+
+import com.sun.xml.internal.fastinfoset.util.CharArray;
+import org.example.interfaces.IReader;
+import org.example.interfaces.IWriter;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Formatter {
-    public String stringFormatter(String data){
+    public String format(IWriter writer, IReader reader){
+        List<Character> array = new ArrayList<>();
 
-        char[] array = data.toCharArray();
+        if(!reader.hasNext()){
+            writer.write(new Scanner(System.in).next());
+            reader.setData(writer.toString());
+        }
+
+        while(reader.hasNext()){
+            try {
+                array.add((char)reader.read());
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
 
         StringBuilder sb = new StringBuilder();
-        sb.append(array[0]);
+        sb.append(array.get(0));
 
         int countTab = 0;
-        for(int i = 1; i < array.length; i++){
-            if(array[i-1] == '{' || array[i-1] == '}' || array[i-1] == ';'){
+        for(int i = 1; i < array.stream().count(); i++){
+            if(array.get(i-1) == '{' || array.get(i-1) == '}' || array.get(i-1) == ';'){
                 sb.append("\n");
 
-                if(array[i-1] == '{' && array[i] != '}'){
+                if(array.get(i-1) == '{' && array.get(i) != '}'){
                     countTab++;
-                } else if(array[i-1] == '}' || (array[i-1] == ';' && array[i] == '}')){
+                } else if(array.get(i-1) == '}' || (array.get(i-1) == ';' && array.get(i) == '}')){
                     countTab--;
                 }
                 for(int j = 0; j < countTab; j++){
@@ -26,30 +45,11 @@ public class Formatter {
                 }
             }
 
-            sb.append(array[i]);
+            sb.append(array.get(i));
         }
 
         return sb.toString();
     }
 
-    public String reader(String path) {
-        StringBuilder sb = new StringBuilder();
-        try(FileInputStream fin=new FileInputStream("notes.txt"))
-        {
-            int i;
-            while((i=fin.read())!=-1){
-                sb.append(i);
-            }
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
-        return sb.toString();
-    }
 
-    public String reader(){
-        Scanner scanner = new Scanner(System.in);
-        String result = scanner.next();
-        return result;
-    }
 }

@@ -6,14 +6,25 @@ public class Formatter {
     public String format(String data){
         
         String[] strArray = data.split("(?=[{};])|(?<=[{};])");
-        
+
+        for(int i = 0; i < strArray.length; i++){
+            strArray[i] = strArray[i].trim().replaceAll("\\s+", " ");
+        }
+
         StringBuilder sb = new StringBuilder();
         ArrayList<String> array = new ArrayList<>();
         
-        for (String s : strArray) {
-            sb.append(s);
-            if (s.equals("{") || s.equals(";") || s.equals("}")) {
-                array.add(sb.toString().trim().replaceAll("\\s+", " "));
+        for (int i = 0; i < strArray.length; i++) {
+            sb.append(strArray[i]);
+            if(strArray[i].startsWith("for")){
+                while(!strArray[i].equals("{")){
+                    sb.append(strArray[++i]);
+                }
+                array.add(sb.toString());
+                sb.delete(0, sb.length());
+            }
+            else if (strArray[i].equals("{") || strArray[i].equals(";") || strArray[i].equals("}")) {
+                array.add(sb.toString());
                 sb.delete(0, sb.length());
             }
         }
@@ -22,18 +33,29 @@ public class Formatter {
         
         sb.append(array.get(0));
         
-        String[] keyWords = new String[] {"if", "else", "switch", "for", "while", "do", "try", "catch", "class", "enum", "synchronized", "public", "private", "protected", "void"};
+        String[] keyWords = new String[] {
+                "if", "else", "switch",
+                "for", "while", "do",
+                "try", "catch",
+                "class", "enum",
+                "synchronized",
+                "public", "private", "protected",
+                "this", "base",
+                "void",
+                "return"
+        };
         
         for(int i = 1; i < array.size(); i++) {
             if (array.get(i-1).contains("{") ||
-                array.get(i-1).contains("}") || 
-                array.get(i-1).contains(";")) {
-                
+                array.get(i-1).contains("}") ||
+                    (array.get(i-1).contains(";") &&
+                            !array.get(i -1).contains("for"))) {
+
                 sb.append("\n");
-                
-                if ((array.get(i-1).contains("{") && !array.get(i).contains("}")) ||    
+
+                if ((array.get(i-1).contains("{") && !array.get(i).contains("}")) ||
                     array.get(i-1).contains("if") ||
-                    array.get(i-1).contains("for") || 
+                    array.get(i-1).contains("for") ||
                     array.get(i-1).contains("while") ||
                     array.get(i-1).contains("do") ||
                     array.get(i-1).contains("switch") ||
@@ -42,10 +64,10 @@ public class Formatter {
                     array.get(i-1).contains("synchronized")
                 ) {
                     countTab++;
-                } 
+                }
                 else {
                     int finalI = i;
-                    if ((array.get(i-1).contains("}") && 
+                    if ((array.get(i-1).contains("}") &&
                          Arrays.stream(keyWords).noneMatch(x -> array.get(finalI).contains(x))) ||
                          (array.get(i-1).contains(";") && array.get(i).contains("}"))
                     ) {

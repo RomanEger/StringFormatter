@@ -4,7 +4,7 @@ import org.example.application.Formatter;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Tests {
+public class FormaterTestCase {
 
     @Test
     public void Test_WithSimpleCode(){
@@ -39,7 +39,7 @@ public class Tests {
                 "\n\t\tif(x>0){" +
                 "\n\t\t\treturn x;" +
                 "\n\t\t}" +
-                "\n\t\telse {" +
+                "\n\t\telse{" +
                 "\n\t\t\treturn -1;" +
                 "\n\t\t}" +
                 "\n\t}" +
@@ -77,6 +77,113 @@ public class Tests {
         assertEquals(
                 expected,
                 result);
+    }
+
+    @Test
+    public void Test_WithTwoMethodsAndIfWithReturn(){
+        Formatter formatter = new Formatter();
+        String result = formatter.format("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "if(x>0){" +
+                "x++;" +
+                "}" +
+                "return x;" +
+                "}" +
+                "public void setX(int x){" +
+                "this.x = x;" +
+                "}" +
+                "}");
+
+        String expected =
+                "package test;" +
+                "\npublic class Foo{" +
+                "\n\tprivate int x;" +
+                "\n\tpublic int getX(){" +
+                "\n\t\tif(x>0){" +
+                "\n\t\t\tx++;" +
+                "\n\t\t}" +
+                "\n\t\treturn x;" +
+                "\n\t}" +
+                "\n\tpublic void setX(int x){" +
+                "\n\t\tthis.x = x;" +
+                "\n\t}" +
+                "\n}";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void Test_WithTwoMethodsAndIf(){
+        Formatter formatter = new Formatter();
+        String result = formatter.format("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "return x;" +
+                "}" +
+                "public void setX(int x){" +
+                "if(x>0){" +
+                "x++;" +
+                "}" +
+                "int y = 5;" +
+                "this.x = x;" +
+                "}" +
+                "}");
+
+        String expected =
+                "package test;" +
+                        "\npublic class Foo{" +
+                        "\n\tprivate int x;" +
+                        "\n\tpublic int getX(){" +
+                        "\n\t\treturn x;" +
+                        "\n\t}" +
+                        "\n\tpublic void setX(int x){" +
+                        "\n\t\tif(x>0){" +
+                        "\n\t\t\tx++;" +
+                        "\n\t\t}" +
+                        "\n\t\tint y = 5;" +
+                        "\n\t\tthis.x = x;" +
+                        "\n\t}" +
+                        "\n}";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void Test_WithTwoMethodsAndForAndIf(){
+        String result = new Formatter().format("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "for(int i = 0; i < 5; i++){" +
+                "if(x>0){" +
+                "x++;" +
+                "}" +
+                "}" +
+                "return x;" +
+                "}" +
+                "public void setX(int x){" +
+                "this.x = x;" +
+                "}" +
+                "}");
+
+        String expected =
+                "package test;" +
+                        "\npublic class Foo{" +
+                        "\n\tprivate int x;" +
+                        "\n\tpublic int getX(){" +
+                        "\n\t\tfor(int i = 0;i < 5;i++){" +
+                        "\n\t\t\tif(x>0){" +
+                        "\n\t\t\t\tx++;" +
+                        "\n\t\t\t}" +
+                        "\n\t\t}" +
+                        "\n\t\treturn x;" +
+                        "\n\t}" +
+                        "\n\tpublic void setX(int x){" +
+                        "\n\t\tthis.x = x;" +
+                        "\n\t}" +
+                        "\n}";
+        assertEquals(expected, result);
     }
 
     @Test

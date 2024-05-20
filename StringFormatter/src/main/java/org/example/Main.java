@@ -16,7 +16,19 @@ public class Main {
         File file = new File("/home/wms/Practice/text.odn");
         
         IWriter writer = new FileWriter(file);
-        writer.write("{{{}}}");
+        writer.write("package test;" +
+                "public class Foo{" +
+                "private int x;" +
+                "public int getX(){" +
+                "if(x>0){" +
+                "x++;" +
+                "}" +
+                "return x;" +
+                "}" +
+                "public void setX(int x){" +
+                "this.x = x;" +
+                "}" +
+                "}");
         
         IReader reader = new FileReader(file);
         ArrayList<Character> chars = new ArrayList<>();

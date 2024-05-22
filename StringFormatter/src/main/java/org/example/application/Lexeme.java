@@ -1,33 +1,44 @@
 package org.example.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lexeme {
-    private ArrayList<Token> lexeme;
+    private final char[] keySymbols = new char[]{
+            '{',
+            '}',
+            ';',
+            '(',
+            ')'
+    };
 
-    public ArrayList<Token> getLexeme() {
+
+    private HashMap<HashMap<String, >, String> map;
+
+    private StringBuilder lexeme = new StringBuilder();
+
+    public StringBuilder getLexeme() {
         return lexeme;
     }
 
-    public void setLexeme(ArrayList<Token> newLexeme){
-        lexeme = newLexeme;
+    public void add(Character token) {
+        lexeme.append(token);
     }
 
-    public void add(Token token){
-        lexeme.add(token);
+    public Lexeme() {
+
     }
 
-    public Lexeme(){}
-
-    public Lexeme(ArrayList<Token> lexeme){
-        setLexeme(lexeme);
+    public Lexeme(StringBuilder lexeme) {
+        this();
+        this.lexeme = lexeme;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Lexeme)){
+        if (!(o instanceof Lexeme)) {
             return false;
         }
-        return this.lexeme.equals(((Lexeme) o).lexeme);
+        return this.lexeme.toString().contentEquals(((Lexeme) o).lexeme);
     }
 }

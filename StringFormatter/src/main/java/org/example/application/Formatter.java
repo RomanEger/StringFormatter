@@ -3,8 +3,9 @@ package org.example.application;
 import java.util.*;
 
 public class Formatter {
-    public String format(String data) {
 
+    public String format(String data) {
+        FormatterStateMachine fsm = new FormatterStateMachine();
         String[] strArray = data.split("(?=[{};])|(?<=[{};])");
 
         for (int i = 0; i < strArray.length; i++) {
@@ -32,17 +33,18 @@ public class Formatter {
 
         sb.append(array.get(0));
 
-        String[] keyWords = new String[]{
-                "if", "else", "switch",
-                "for", "while", "do",
-                "try", "catch",
-                "class", "enum",
-                "synchronized",
-                "public", "private", "protected",
-                "this", "base",
-                "void",
-                "return"
-        };
+
+//        String[] keyWords = new String[]{
+//                "if", "else", "switch",
+//                "for", "while", "do",
+//                "try", "catch",
+//                "class", "enum",
+//                "synchronized",
+//                "public", "private", "protected",
+//                "this", "base",
+//                "void",
+//                "return"
+//        };
 
         for (int i = 1; i < array.size(); i++) {
             if (array.get(i - 1).contains("{") ||
@@ -53,11 +55,8 @@ public class Formatter {
 
                 if (array.get(i - 1).contains("{") && !array.get(i).contains("}")) {
                     countTab++;
-                } else {
-                    if (array.get(i).contains("}") && !array.get(i - 1).contains("{")
-                    ) {
-                        countTab--;
-                    }
+                } else if (array.get(i).contains("}") && !array.get(i - 1).contains("{")) {
+                    countTab--;
                 }
                 for (int j = 0; j < countTab; j++) {
                     sb.append("\t");

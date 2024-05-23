@@ -3,9 +3,8 @@ package org.example.application;
 import java.util.*;
 
 public class Formatter {
-
     public String format(String data) {
-        FormatterStateMachine fsm = new FormatterStateMachine();
+        //FormatterStateMachine fsm = new FormatterStateMachine();
         String[] strArray = data.split("(?=[{};])|(?<=[{};])");
 
         for (int i = 0; i < strArray.length; i++) {

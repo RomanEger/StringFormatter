@@ -1,8 +1,5 @@
 package org.example.application;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Lexeme {
     private final char[] keySymbols = new char[]{
             '{',
@@ -11,9 +8,6 @@ public class Lexeme {
             '(',
             ')'
     };
-
-
-    private HashMap<HashMap<String, >, String> map;
 
     private StringBuilder lexeme = new StringBuilder();
 

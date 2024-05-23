@@ -4,6 +4,7 @@ import org.example.application.Formatter;
 import org.example.application.Lexeme;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,8 +13,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithSimpleCode(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("public class Foo{private int x;}");
+        String result = getResultForFsm("public class Foo{private int x;}");
         assertEquals(
                 "public class Foo{" +
                         "\n\tprivate int x;" +
@@ -23,8 +23,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithIfElse(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("package test;" +
+        String data = "package test;" +
                 "public class Foo{" +
                 "private int x;" +
                 "public int getX(){" +
@@ -35,7 +34,8 @@ public class FormaterTestCase {
                 "return -1;" +
                 "}" +
                 "}" +
-                "}");
+                "}";
+        String result = getResultForFsm(data);
         String expected = "package test;" +
                 "\npublic class Foo{" +
                 "\n\tprivate int x;" +
@@ -56,8 +56,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithTwoMethods(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("package test;" +
+        String data = "package test;" +
                 "public class Foo{" +
                 "private int x;" +
                 "public int getX(){" +
@@ -66,7 +65,8 @@ public class FormaterTestCase {
                 "public void setX(int x){" +
                 "this.x = x;" +
                 "}" +
-                "}");
+                "}";
+        String result = getResultForFsm(data);
         String expected = "package test;" +
                 "\npublic class Foo{" +
                 "\n\tprivate int x;" +
@@ -85,8 +85,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithTwoMethodsAndIfWithReturn(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("package test;" +
+        String data = "package test;" +
                 "public class Foo{" +
                 "private int x;" +
                 "public int getX(){" +
@@ -98,8 +97,9 @@ public class FormaterTestCase {
                 "public void setX(int x){" +
                 "this.x = x;" +
                 "}" +
-                "}");
+                "}";
 
+        String result = getResultForFsm(data);
         String expected =
                 "package test;" +
                 "\npublic class Foo{" +
@@ -119,8 +119,8 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithTwoMethodsAndIf(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("package test;" +
+        
+        String data = "package test;" +
                 "public class Foo{" +
                 "private int x;" +
                 "public int getX(){" +
@@ -133,8 +133,10 @@ public class FormaterTestCase {
                 "int y = 5;" +
                 "this.x = x;" +
                 "}" +
-                "}");
+                "}";
 
+        String result = getResultForFsm(data);
+        
         String expected =
                 "package test;" +
                         "\npublic class Foo{" +
@@ -155,7 +157,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithTwoMethodsAndForAndIf(){
-        String result = new Formatter().format("package test;" +
+        String data = "package test;" +
                 "public class Foo{" +
                 "private int x;" +
                 "public int getX(){" +
@@ -169,8 +171,9 @@ public class FormaterTestCase {
                 "public void setX(int x){" +
                 "this.x = x;" +
                 "}" +
-                "}");
+                "}";
 
+        String result = getResultForFsm(data);
         String expected =
                 "package test;" +
                         "\npublic class Foo{" +
@@ -192,8 +195,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithQuotations(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("{{{}}}");
+        String result = getResultForFsm("{{{}}}");
         assertEquals(
                 "{" +
                         "\n\t{" +
@@ -206,8 +208,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithText(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("{str;stt;stg;}");
+        String result = getResultForFsm("{str;stt;stg;}");
         assertEquals(
                 "{" +
                         "\n\tstr;" +
@@ -219,8 +220,7 @@ public class FormaterTestCase {
 
     @Test
     public void Test_WithQuotationsAndText(){
-        Formatter formatter = new Formatter();
-        String result = formatter.format("{str;stt;ggt;{sss;}}");
+        String result = getResultForFsm("{str;stt;ggt;{sss;}}");
         assertEquals(
                 "{" +
                         "\n\tstr;" +
@@ -235,7 +235,6 @@ public class FormaterTestCase {
     
     @Test
     public void Test_WithString(){
-        Formatter formatter = new Formatter();
         String data = "package test;" +
                 "public class Tests{" +
                 "private void helloWorld(){" +
@@ -247,7 +246,7 @@ public class FormaterTestCase {
                 "}" +
                 "}" +
                 "}";
-        String result = formatter.format(data);
+        String result = getResultForFsm(data);
         String expected = "package test;" +
                 "\npublic class Tests{" +
                 "\n\tprivate void helloWorld(){" +
@@ -292,14 +291,14 @@ public class FormaterTestCase {
     }
 
     @Test
-    public void Test_MainMethod(){
+    public void Test_Main(){
         String data = "package org.example;" +
                 "import org.example.application.*;" +
                 "import org.example.interfaces.*;" +
                 "import java.io.File;" +
                 "import java.io.IOException;" +
                 "import java.util.ArrayList;" +
-                "public class Main {" +
+                "public class Main{" +
                 "public static void main(String[] args) throws IOException{" +
                 "Formatter formatter = new Formatter();" +
                 "File file = new File(\"/home/wms/Practice/text.odn\");" +
@@ -346,68 +345,14 @@ public class FormaterTestCase {
                 "\n}";
         assertEquals(expected, result);
     }
-
-    @Test
-    public void Test_WithFsm(){
-        String data = "package org.example;" +
-                "import org.example.application.*;" +
-                "import org.example.interfaces.*;" +
-                "import java.io.File;" +
-                "import java.io.IOException;" +
-                "import java.util.ArrayList;" +
-                "public class Main {" +
-                "public static void main(String[] args) throws IOException{" +
-                "Formatter formatter = new Formatter();" +
-                "File file = new File(\"/home/wms/Practice/text.odn\");" +
-                "IWriter writer = new FileWriter(file);" +
-                "writer.write(\"some data\");" +
-                "IReader reader = new FileReader(file);" +
-                "ArrayList<Character> chars = new ArrayList<>();" +
-                "while (reader.hasNext()){" +
-                "chars.add((char)reader.read());" +
-                "}" +
-                "StringBuilder sb = new StringBuilder();" +
-                "for(Character c : chars){" +
-                "sb.append(c);" +
-                "}" +
-                "String result = formatter.format(sb.toString());" +
-                "System.out.println(result);" +
-                "}" +
-                "}";
-
-        //StringBuilder sb = new StringBuilder(data);
+    
+    private String getResultForFsm(String data){
         ArrayList<Lexeme> lexemes = new ArrayList<>();
         String[] strArray = data.split("(?=[{};])|(?<=[{};])");
         for(String str: strArray){
             lexemes.add(new Lexeme(new StringBuilder(str)));
         }
         Lexeme[] lexemesArr = new Lexeme[lexemes.size()];
-        String result = new Formatter().format(lexemes.toArray(lexemesArr));
-        String expected = "package org.example;" +
-                "\nimport org.example.application.*;" +
-                "\nimport org.example.interfaces.*;" +
-                "\nimport java.io.File;" +
-                "\nimport java.io.IOException;" +
-                "\nimport java.util.ArrayList;" +
-                "\npublic class Main{" +
-                "\n\tpublic static void main(String[] args) throws IOException{" +
-                "\n\t\tFormatter formatter = new Formatter();" +
-                "\n\t\tFile file = new File(\"/home/wms/Practice/text.odn\");" +
-                "\n\t\tIWriter writer = new FileWriter(file);" +
-                "\n\t\twriter.write(\"some data\");" +
-                "\n\t\tIReader reader = new FileReader(file);" +
-                "\n\t\tArrayList<Character> chars = new ArrayList<>();" +
-                "\n\t\twhile (reader.hasNext()){" +
-                "\n\t\t\tchars.add((char)reader.read());" +
-                "\n\t\t}" +
-                "\n\t\tStringBuilder sb = new StringBuilder();" +
-                "\n\t\tfor(Character c : chars){" +
-                "\n\t\t\tsb.append(c);" +
-                "\n\t\t}" +
-                "\n\t\tString result = formatter.format(sb.toString());" +
-                "\n\t\tSystem.out.println(result);" +
-                "\n\t}" +
-                "\n}";
-        assertEquals(expected, result);
+        return new Formatter().format(lexemes.toArray(lexemesArr));
     }
 }

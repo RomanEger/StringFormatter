@@ -6,7 +6,6 @@ import java.util.*;
 
 public class Formatter {
     public String format(String data) {
-        //FormatterStateMachine fsm = new FormatterStateMachine();
         String[] strArray = data.split("(?=[{};])|(?<=[{};])");
 
         for (int i = 0; i < strArray.length; i++) {
@@ -34,19 +33,6 @@ public class Formatter {
 
         sb.append(array.get(0));
 
-
-//        String[] keyWords = new String[]{
-//                "if", "else", "switch",
-//                "for", "while", "do",
-//                "try", "catch",
-//                "class", "enum",
-//                "synchronized",
-//                "public", "private", "protected",
-//                "this", "base",
-//                "void",
-//                "return"
-//        };
-
         for (int i = 1; i < array.size(); i++) {
             if (array.get(i - 1).contains("{") ||
                     array.get(i - 1).contains("}") ||
@@ -69,10 +55,22 @@ public class Formatter {
         return sb.toString();
     }
 
-    public String format(Lexeme[] lexemes){
+    public String format(Lexeme[] lexemeArr){
         StringBuilder sb = new StringBuilder();
+        
         FormatterStateMachine fsm = new FormatterStateMachine();
-        fsm.hande(lexemes, sb);
+        
+        ArrayList<Lexeme> lexemes = new ArrayList<>();
+        
+        for(Lexeme lexeme : lexemeArr) {
+            String s = lexeme.getLexeme().toString().trim().replaceAll("\\s+", " ");
+            lexemes.add(new Lexeme(new StringBuilder(s)));
+        }
+        
+        Lexeme[] l = new Lexeme[lexemes.size()];
+        
+        fsm.hande(lexemes.toArray(l), sb);
+        
         return sb.toString();
     }
 }

@@ -13,22 +13,6 @@ public class Lexeme {
         return lexeme;
     }
 
-//    public boolean isNormal(){
-//        if(lexeme.toString().contains()){
-//            return false;
-//        }
-//        return true;
-//    }
-
-//    public boolean contains(Character token){
-//        for(char c : keySymbols){
-//            if(c == token){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     public void add(Character token) {
         lexeme.append(token);
     }

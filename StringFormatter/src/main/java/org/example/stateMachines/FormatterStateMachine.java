@@ -4,7 +4,7 @@ import org.example.application.Lexeme;
 
 public class FormatterStateMachine {
     private enum state {read, addLexeme, addLineBreak, addTab, removeTab};
-    private state status;
+    private state status = state.read;
     private int countTab;
 
     public void hande(Lexeme[] lexemes, StringBuilder sb){
@@ -13,8 +13,11 @@ public class FormatterStateMachine {
             String lexeme = lexemes[i].getLexeme().toString();
             switch (status){
                 case read:{
-                    if(lexeme.contains("{") || lexeme.contains("}") || lexeme.contains(";"))
+                    if(lexeme.contains("{") || lexeme.contains("}") || lexeme.contains(";")){
                         status = state.addLineBreak;
+                    }
+                    else
+                        status = state.addLexeme;
                     if(lexeme.contains("{"))
                         status = state.addTab;
                     else if(lexeme.contains("}"))
@@ -27,6 +30,7 @@ public class FormatterStateMachine {
                     }
                     sb.append(lexeme);
                     i++;
+                    status = state.read;
                     break;
                 }
                 case addLineBreak:{
@@ -36,10 +40,12 @@ public class FormatterStateMachine {
                 }
                 case addTab:{
                     countTab++;
+                    status = state.read;
                     break;
                 }
                 case removeTab:{
                     countTab--;
+                    status = state.read;
                     break;
                 }
                 default:

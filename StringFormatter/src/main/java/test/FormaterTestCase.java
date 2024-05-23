@@ -1,7 +1,11 @@
 package test;
 
 import org.example.application.Formatter;
+import org.example.application.Lexeme;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FormaterTestCase {
@@ -315,6 +319,70 @@ public class FormaterTestCase {
                 "}" +
                 "}";
         String result = new Formatter().format(data);
+        String expected = "package org.example;" +
+                "\nimport org.example.application.*;" +
+                "\nimport org.example.interfaces.*;" +
+                "\nimport java.io.File;" +
+                "\nimport java.io.IOException;" +
+                "\nimport java.util.ArrayList;" +
+                "\npublic class Main{" +
+                "\n\tpublic static void main(String[] args) throws IOException{" +
+                "\n\t\tFormatter formatter = new Formatter();" +
+                "\n\t\tFile file = new File(\"/home/wms/Practice/text.odn\");" +
+                "\n\t\tIWriter writer = new FileWriter(file);" +
+                "\n\t\twriter.write(\"some data\");" +
+                "\n\t\tIReader reader = new FileReader(file);" +
+                "\n\t\tArrayList<Character> chars = new ArrayList<>();" +
+                "\n\t\twhile (reader.hasNext()){" +
+                "\n\t\t\tchars.add((char)reader.read());" +
+                "\n\t\t}" +
+                "\n\t\tStringBuilder sb = new StringBuilder();" +
+                "\n\t\tfor(Character c : chars){" +
+                "\n\t\t\tsb.append(c);" +
+                "\n\t\t}" +
+                "\n\t\tString result = formatter.format(sb.toString());" +
+                "\n\t\tSystem.out.println(result);" +
+                "\n\t}" +
+                "\n}";
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void Test_WithFsm(){
+        String data = "package org.example;" +
+                "import org.example.application.*;" +
+                "import org.example.interfaces.*;" +
+                "import java.io.File;" +
+                "import java.io.IOException;" +
+                "import java.util.ArrayList;" +
+                "public class Main {" +
+                "public static void main(String[] args) throws IOException{" +
+                "Formatter formatter = new Formatter();" +
+                "File file = new File(\"/home/wms/Practice/text.odn\");" +
+                "IWriter writer = new FileWriter(file);" +
+                "writer.write(\"some data\");" +
+                "IReader reader = new FileReader(file);" +
+                "ArrayList<Character> chars = new ArrayList<>();" +
+                "while (reader.hasNext()){" +
+                "chars.add((char)reader.read());" +
+                "}" +
+                "StringBuilder sb = new StringBuilder();" +
+                "for(Character c : chars){" +
+                "sb.append(c);" +
+                "}" +
+                "String result = formatter.format(sb.toString());" +
+                "System.out.println(result);" +
+                "}" +
+                "}";
+
+        //StringBuilder sb = new StringBuilder(data);
+        ArrayList<Lexeme> lexemes = new ArrayList<>();
+        String[] strArray = data.split("(?=[{};])|(?<=[{};])");
+        for(String str: strArray){
+            lexemes.add(new Lexeme(new StringBuilder(str)));
+        }
+        Lexeme[] lexemesArr = new Lexeme[lexemes.size()];
+        String result = new Formatter().format(lexemes.toArray(lexemesArr));
         String expected = "package org.example;" +
                 "\nimport org.example.application.*;" +
                 "\nimport org.example.interfaces.*;" +

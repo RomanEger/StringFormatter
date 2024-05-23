@@ -1,5 +1,7 @@
 package org.example.application;
 
+import org.example.stateMachines.FormatterStateMachine;
+
 import java.util.*;
 
 public class Formatter {
@@ -67,4 +69,10 @@ public class Formatter {
         return sb.toString();
     }
 
+    public String format(Lexeme[] lexemes){
+        StringBuilder sb = new StringBuilder();
+        FormatterStateMachine fsm = new FormatterStateMachine();
+        fsm.hande(lexemes, sb);
+        return sb.toString();
+    }
 }
